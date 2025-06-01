@@ -32,6 +32,7 @@ class AppSizes {
 
   // Appbar heigth
   static const double appBarHeigth = 56.0;
+  static const double appBarAuthHeigth = 115.0;
 
   // Images sizes
   static const double imageThumbSize = 80.0;

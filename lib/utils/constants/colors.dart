@@ -5,7 +5,7 @@ class AppColors {
   AppColors._();
 
   // App BAsic colors
-  static Color? primary = Colors.blue[300];
+  static Color? primary = Color(0xFF04C1E3);
   static Color secondary = Colors.blue;
   static Color? accent = Colors.brown[300];
 

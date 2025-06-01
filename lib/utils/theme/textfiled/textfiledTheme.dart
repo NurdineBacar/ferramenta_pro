@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:project/utils/constants/colors.dart';
 
 class AppTextfiledTheme {
   AppTextfiledTheme._();
@@ -7,6 +8,7 @@ class AppTextfiledTheme {
     errorMaxLines: 3,
     prefixIconColor: Colors.grey.shade600,
     suffixIconColor: Colors.grey.shade500,
+    floatingLabelStyle: TextStyle(color: AppColors.primary),
     border: OutlineInputBorder().copyWith(
       borderRadius: BorderRadius.circular(12),
       borderSide: BorderSide(width: 2, color: Colors.grey),
