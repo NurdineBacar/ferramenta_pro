@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:get/instance_manager.dart';
+import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:project/features/auth/controller/auth.controller.dart';
 import 'package:project/utils/constants/sizes.dart';
@@ -8,7 +8,10 @@ import 'package:project/utils/constants/text_string.dart';
 import 'package:project/utils/helpers/function_helpers.dart';
 
 class NewPasswordScreen extends StatelessWidget {
-  const NewPasswordScreen({super.key});
+  NewPasswordScreen({super.key});
+
+  final RxBool showPassword1 = false.obs;
+  final RxBool showPassword2 = false.obs;
 
   @override
   Widget build(BuildContext context) {
@@ -53,35 +56,55 @@ class NewPasswordScreen extends StatelessWidget {
                 Form(
                   child: Column(
                     children: [
-                      TextFormField(
-                        obscureText: true,
-                        obscuringCharacter: "*",
-                        inputFormatters: [LengthLimitingTextInputFormatter(8)],
-                        decoration: InputDecoration(
-                          prefixIcon: Icon(Iconsax.key),
-                          suffixIcon: IconButton(
-                            onPressed: () {},
-                            icon: Icon(Iconsax.eye),
+                      Obx(
+                        () => TextFormField(
+                          obscureText: !showPassword1.value ? true : false,
+                          obscuringCharacter: "*",
+                          inputFormatters: [
+                            LengthLimitingTextInputFormatter(8),
+                          ],
+                          decoration: InputDecoration(
+                            prefixIcon: Icon(Iconsax.key),
+                            suffixIcon: IconButton(
+                              onPressed: () {
+                                showPassword1.value = !showPassword1.value;
+                              },
+                              icon: Icon(
+                                showPassword1.value
+                                    ? Iconsax.eye_slash
+                                    : Iconsax.eye,
+                              ),
+                            ),
+                            prefixText: "| ",
+                            labelText: "Nova senha",
+                            hintText: "Insira a sua nova senha",
                           ),
-                          prefixText: "| ",
-                          labelText: "Nova senha",
-                          hintText: "Insira a sua nova senha",
                         ),
                       ),
                       SizedBox(height: 20),
-                      TextFormField(
-                        obscureText: true,
-                        obscuringCharacter: "*",
-                        inputFormatters: [LengthLimitingTextInputFormatter(8)],
-                        decoration: InputDecoration(
-                          prefixIcon: Icon(Iconsax.password_check),
-                          suffixIcon: IconButton(
-                            onPressed: () {},
-                            icon: Icon(Iconsax.eye),
+                      Obx(
+                        () => TextFormField(
+                          obscureText: !showPassword2.value ? true : false,
+                          obscuringCharacter: "*",
+                          inputFormatters: [
+                            LengthLimitingTextInputFormatter(8),
+                          ],
+                          decoration: InputDecoration(
+                            prefixIcon: Icon(Iconsax.password_check),
+                            suffixIcon: IconButton(
+                              onPressed: () {
+                                showPassword2.value = !showPassword2.value;
+                              },
+                              icon: Icon(
+                                showPassword2.value
+                                    ? Iconsax.eye_slash
+                                    : Iconsax.eye,
+                              ),
+                            ),
+                            prefixText: "| ",
+                            labelText: "Confirmar nova senha",
+                            hintText: "Confirma a sua nova senha",
                           ),
-                          prefixText: "| ",
-                          labelText: "Confirmar nova senha",
-                          hintText: "Confirma a sua nova senha",
                         ),
                       ),
                       SizedBox(height: 70),

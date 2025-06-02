@@ -68,6 +68,10 @@ class AppDeviceUtils {
     Future.delayed(duration, () => HapticFeedback.vibrate());
   }
 
+  static bool isDarkMode() {
+    return MediaQuery.of(Get.context!).platformBrightness == Brightness.dark;
+  }
+
   static bool isIOS() {
     return Platform.isIOS;
   }

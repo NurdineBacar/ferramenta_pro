@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:project/utils/theme/ckeckbox/checkbox_theme.dart';
 import 'package:project/utils/theme/elevetedButton/eleveted_button.dart';
 import 'package:project/utils/theme/text/text_theme.dart';
 import 'package:project/utils/theme/textfiled/textfiledTheme.dart';
@@ -11,6 +12,7 @@ class AppTheme {
     inputDecorationTheme: AppTextfiledTheme.inputLight,
     textTheme: AppTextTheme.lightTextTheme,
     elevatedButtonTheme: AppElevetedButtonTheme.lightElevatedButton,
+    checkboxTheme: AppCheckboxTheme.lightCheboxTheme,
   );
 
   static ThemeData darkTheme = ThemeData(
@@ -18,5 +20,6 @@ class AppTheme {
     inputDecorationTheme: AppTextfiledTheme.inputLight,
     textTheme: AppTextTheme.darkTextTheme,
     elevatedButtonTheme: AppElevetedButtonTheme.lightElevatedButton,
+    checkboxTheme: AppCheckboxTheme.darkCheboxTheme,
   );
 }

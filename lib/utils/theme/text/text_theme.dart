@@ -1,33 +1,53 @@
 import 'package:flutter/material.dart';
+import 'package:project/utils/constants/colors.dart';
 
 class AppTextTheme {
   AppTextTheme._();
 
-  static TextTheme lightTextTheme = const TextTheme(
-    headlineLarge: TextStyle(
+  static TextTheme lightTextTheme = TextTheme(
+    headlineLarge: const TextStyle(
       fontSize: 36,
       fontWeight: FontWeight.bold,
       color: Colors.black,
     ),
-    headlineMedium: TextStyle(
+    headlineMedium: const TextStyle(
       fontSize: 24,
       fontWeight: FontWeight.bold,
       color: Colors.black,
     ),
-    headlineSmall: TextStyle(
+    headlineSmall: const TextStyle(
       fontSize: 16,
       fontWeight: FontWeight.w600,
       color: Colors.black,
     ),
-    titleSmall: TextStyle(
+    titleMedium: const TextStyle(
+      fontSize: 16,
+      color: Colors.black,
+      fontWeight: FontWeight.bold,
+    ),
+    titleSmall: const TextStyle(
       fontSize: 16,
       color: Colors.grey,
       fontWeight: FontWeight.w600,
     ),
-    bodyMedium: TextStyle(color: Colors.black, fontSize: 14),
+    bodyMedium: const TextStyle(color: Colors.black, fontSize: 14),
+    labelSmall: const TextStyle(
+      color: Colors.white,
+      fontWeight: FontWeight.w600,
+    ),
+    labelMedium: const TextStyle(
+      color: Colors.white,
+      fontSize: 16,
+      fontWeight: FontWeight.bold,
+    ),
+    labelLarge: TextStyle(
+      fontSize: 17,
+      fontWeight: FontWeight.w700,
+      color: AppColors.primary,
+    ),
   );
 
-  static TextTheme darkTextTheme = const TextTheme(
+  static TextTheme darkTextTheme = TextTheme(
     headlineLarge: TextStyle(
       fontSize: 36,
       fontWeight: FontWeight.bold,
@@ -44,11 +64,27 @@ class AppTextTheme {
       color: Colors.black,
     ),
 
+    titleMedium: TextStyle(
+      fontSize: 16,
+      color: Colors.grey,
+      fontWeight: FontWeight.bold,
+    ),
     titleSmall: TextStyle(
       fontSize: 16,
       color: Colors.grey,
       fontWeight: FontWeight.w600,
     ),
     bodyMedium: TextStyle(color: Colors.white, fontSize: 14),
+    labelSmall: TextStyle(color: Colors.black, fontWeight: FontWeight.w600),
+    labelMedium: TextStyle(
+      color: Colors.white,
+      fontSize: 16,
+      fontWeight: FontWeight.bold,
+    ),
+    labelLarge: TextStyle(
+      fontSize: 17,
+      fontWeight: FontWeight.w700,
+      color: AppColors.primary,
+    ),
   );
 }

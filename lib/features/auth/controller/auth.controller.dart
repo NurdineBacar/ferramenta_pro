@@ -5,6 +5,7 @@ import 'package:project/features/auth/screens/forget-password/new-password/new_p
 import 'package:project/features/auth/screens/forget-password/otp_code/verify_otp.dart';
 import 'package:project/features/auth/screens/sign-in/sign_in.dart';
 import 'package:project/features/auth/screens/sign-up/sign_up.dart';
+import 'package:project/features/auth/screens/sign-up/terms_and_conditions/terms_and_condition.dart';
 
 class AuthController extends GetxController {
   static AuthController get instance => Get.find();
@@ -65,6 +66,15 @@ class AuthController extends GetxController {
   void getToNewPassword() {
     Get.to(
       () => NewPasswordScreen(),
+      transition: Transition.rightToLeft,
+      curve: Curves.easeIn,
+      duration: Duration(milliseconds: 500),
+    );
+  }
+
+  void getToTerms() {
+    Get.to(
+      () => TermsAndConditionScreen(),
       transition: Transition.rightToLeft,
       curve: Curves.easeIn,
       duration: Duration(milliseconds: 500),
