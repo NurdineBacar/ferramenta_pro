@@ -9,7 +9,7 @@ class AppTextConst {
       "Seja bem vindo, insira seus dados para inciar sessão";
   static const String signInForgetPassword = "Esqueceu sua senha?";
   static const String signInDontHaveAccount = "Não têm conta? ";
-  static const String signInCreate = "Crie";
+  static const String signInCreate = "Criar conta";
 
   // Sign-Up
   static const String signUpTitle1 = "Criar Conta";

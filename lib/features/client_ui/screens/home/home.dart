@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:project/common/widgets/item_equipament.dart';
 import 'package:project/features/client_ui/model/categories.dart';
 import 'package:project/features/client_ui/model/equipament.dart';
+import 'package:project/features/client_ui/screens/details/details_screen.dart';
 import 'package:project/features/client_ui/screens/home/widgets/home_banner.dart';
 import 'package:project/features/client_ui/screens/home/widgets/home_categorie_item.dart';
 import 'package:project/features/client_ui/screens/home/widgets/home_header.dart';
@@ -21,7 +23,7 @@ class HomeScreen extends StatelessWidget {
             const SizedBox(height: 20),
 
             // Header
-            const HomeHeader(),
+            HomeHeader(),
             const SizedBox(height: 30),
 
             TextField(
@@ -81,7 +83,18 @@ class HomeScreen extends StatelessWidget {
                           ),
                       itemBuilder: (context, index) {
                         final equipament = EquipamentList.equipments[index];
-                        return ItemEquipament(equipement: equipament);
+                        return ItemEquipament(
+                          equipement: equipament,
+                          onAction: () {
+                            Get.to(
+                              () => DetailsEquipamentScreen(),
+                              transition: Transition.cupertino,
+                              curve: Curves.easeIn,
+                              duration: Duration(milliseconds: 600),
+                              arguments: equipament,
+                            );
+                          },
+                        );
                       },
                     ),
                     SizedBox(height: 20),

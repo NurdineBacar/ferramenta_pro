@@ -5,12 +5,13 @@ import 'package:project/utils/helpers/function_helpers.dart';
 
 class ItemEquipament extends StatelessWidget {
   final Equipament equipement;
-  const ItemEquipament({super.key, required this.equipement});
+  final VoidCallback? onAction;
+  const ItemEquipament({super.key, required this.equipement, this.onAction});
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {},
+      onTap: onAction,
       child: Column(
         children: [
           SizedBox(

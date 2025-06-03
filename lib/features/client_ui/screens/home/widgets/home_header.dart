@@ -1,10 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:get/get_navigation/get_navigation.dart';
+import 'package:get/instance_manager.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:project/features/client_ui/controller/navigationController.dart';
+import 'package:project/features/client_ui/screens/cart/cart_screen.dart';
 import 'package:project/utils/constants/colors.dart';
 import 'package:project/utils/device/device_utility.dart';
 
 class HomeHeader extends StatelessWidget {
-  const HomeHeader({super.key});
+  HomeHeader({super.key});
+
+  final controller = Get.put(NavigationController());
 
   @override
   Widget build(BuildContext context) {
@@ -49,16 +55,18 @@ class HomeHeader extends StatelessWidget {
             ),
           ],
         ),
-        GestureDetector(
-          onTap: () {},
-          child: SizedBox(
-            width: 50, // largura maior que o container do ícone
-            height: 50, // altura maior que o container do ícone
-            child: Stack(
-              clipBehavior:
-                  Clip.none, // permite que o badge fique fora do Stack
-              children: [
-                Container(
+
+        SizedBox(
+          width: 50, // largura maior que o container do ícone
+          height: 50, // altura maior que o container do ícone
+          child: Stack(
+            clipBehavior: Clip.none, // permite que o badge fique fora do Stack
+            children: [
+              GestureDetector(
+                onTap: () {
+                  Get.put(NavigationController()).selectedIndex.value = 1;
+                },
+                child: Container(
                   width: 42,
                   height: 42,
                   decoration: BoxDecoration(
@@ -70,29 +78,29 @@ class HomeHeader extends StatelessWidget {
                   ),
                   child: Icon(Iconsax.shopping_cart),
                 ),
-                Positioned(
-                  right: 0, // badge um pouco para fora à direita
-                  top: -8, // badge um pouco acima
-                  child: Container(
-                    width: 25,
-                    height: 25,
-                    padding: EdgeInsets.all(4),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(100),
-                      color:
-                          AppDeviceUtils.isDarkMode()
-                              ? Colors.white
-                              : AppColors.primary,
-                    ),
-                    child: Text(
-                      "12",
-                      style: Theme.of(context).textTheme.labelSmall,
-                      textAlign: TextAlign.center,
-                    ),
+              ),
+              Positioned(
+                right: 0, // badge um pouco para fora à direita
+                top: -8, // badge um pouco acima
+                child: Container(
+                  width: 25,
+                  height: 25,
+                  padding: EdgeInsets.all(4),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(100),
+                    color:
+                        AppDeviceUtils.isDarkMode()
+                            ? Colors.white
+                            : AppColors.primary,
+                  ),
+                  child: Text(
+                    "12",
+                    style: Theme.of(context).textTheme.labelSmall,
+                    textAlign: TextAlign.center,
                   ),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ],

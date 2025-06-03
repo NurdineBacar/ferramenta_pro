@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:get/get_navigation/get_navigation.dart';
 import 'package:get/instance_manager.dart';
 import 'package:get/state_manager.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:project/features/auth/controller/auth.controller.dart';
+import 'package:project/features/client_ui/screens/main.dart';
 import 'package:project/utils/constants/colors.dart';
 import 'package:project/utils/constants/sizes.dart';
 import 'package:project/utils/constants/text_string.dart';
@@ -70,7 +72,14 @@ class SignForm extends StatelessWidget {
           SizedBox(
             width: Helpers.screenWidth(context),
             child: ElevatedButton(
-              onPressed: () {},
+              onPressed: () {
+                Get.to(
+                  () => ClientMain(),
+                  transition: Transition.cupertino,
+                  curve: Curves.ease,
+                  duration: Duration(milliseconds: 700),
+                );
+              },
               child: const Text("Entrar"),
             ),
           ),
