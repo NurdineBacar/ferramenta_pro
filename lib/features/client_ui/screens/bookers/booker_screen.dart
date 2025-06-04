@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:project/features/client_ui/model/cart_item_model.dart';
+import 'package:project/features/client_ui/screens/details_bookers/details_booker_screen.dart';
 import 'package:project/features/client_ui/screens/home/widgets/home_categorie_item.dart';
 import 'package:project/features/client_ui/screens/home/widgets/home_header.dart';
 import 'package:project/utils/constants/colors.dart';
@@ -38,7 +40,15 @@ class BookerScreen extends StatelessWidget {
                 final cartItem = CartitemList.cartItems[index];
 
                 return Column(
-                  children: [BookerItem(item: cartItem), SizedBox(height: 15)],
+                  children: [
+                    BookerItem(
+                      item: cartItem,
+                      onAction: () {
+                        Get.to(() => DetailsBookerScreen());
+                      },
+                    ),
+                    SizedBox(height: 15),
+                  ],
                 );
               },
             ),
@@ -53,13 +63,14 @@ class BookerScreen extends StatelessWidget {
 
 class BookerItem extends StatelessWidget {
   final CartItemModel item;
+  final VoidCallback? onAction;
 
-  const BookerItem({super.key, required this.item});
+  const BookerItem({super.key, required this.item, this.onAction});
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {},
+      onTap: onAction,
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 15, vertical: 12),
         decoration: BoxDecoration(

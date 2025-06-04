@@ -63,5 +63,14 @@ class EquipamentList {
       images: ['assets/images/item.jpg'],
       pricePerDay: 75.0,
     ),
+    Equipament(
+      name: 'Martelo comedor',
+      minDays: 1,
+      maxDays: 5,
+      description:
+          'Martelo elétrico de 10kg para demolição de concreto e alvenaria.',
+      images: ['assets/images/item.jpg'],
+      pricePerDay: 75.0,
+    ),
   ];
 }

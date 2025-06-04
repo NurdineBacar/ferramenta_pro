@@ -4,6 +4,7 @@ import 'package:iconsax/iconsax.dart';
 import 'package:project/common/widgets/item_equipament.dart';
 import 'package:project/features/client_ui/model/categories.dart';
 import 'package:project/features/client_ui/model/equipament.dart';
+import 'package:project/features/client_ui/screens/categories/categorie_screen.dart';
 import 'package:project/features/client_ui/screens/details/details_screen.dart';
 import 'package:project/features/client_ui/screens/home/widgets/home_banner.dart';
 import 'package:project/features/client_ui/screens/home/widgets/home_categorie_item.dart';
@@ -63,6 +64,12 @@ class HomeScreen extends StatelessWidget {
                           return CategoryItem(
                             label: categorie.label,
                             icon: categorie.icon,
+                            onTap: () {
+                              Get.to(
+                                () => CategorieScreen(),
+                                arguments: {"categorie": categorie},
+                              );
+                            },
                           );
                         },
                       ),
@@ -91,7 +98,7 @@ class HomeScreen extends StatelessWidget {
                               transition: Transition.cupertino,
                               curve: Curves.easeIn,
                               duration: Duration(milliseconds: 600),
-                              arguments: equipament,
+                              arguments: {"equipament": equipament},
                             );
                           },
                         );

@@ -1,7 +1,23 @@
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
+import 'package:project/utils/constants/colors.dart';
 
 class Helpers {
   Helpers._();
+
+  static Color itemType(String t) {
+    switch (t) {
+      case "all":
+        return Colors.grey;
+      case "destructive":
+        return Colors.red;
+      case "primary":
+        return AppColors.primary!;
+      case "success":
+        return AppColors.success;
+      default:
+        return Colors.blue; // or any default color you prefer
+    }
+  }
 
   static double screenWidth(BuildContext context) {
     return MediaQuery.of(context).size.width;

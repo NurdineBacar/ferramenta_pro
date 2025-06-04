@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:project/common/widgets/courossel_item.dart';
+import 'package:project/features/client_ui/model/equipament.dart';
 import 'package:project/utils/constants/colors.dart';
 import 'package:project/utils/helpers/function_helpers.dart';
 
@@ -11,6 +12,21 @@ class DetailsEquipamentScreen extends StatelessWidget {
   final Rx<int> currentImage = 0.obs;
 
   final Rx<int> days = 1.obs;
+
+  Equipament get _equipamebt {
+    final args = Get.arguments;
+    if (args != null && args.containsKey('equipament')) {
+      return args["equipament"] as Equipament;
+    }
+
+    throw Exception('Equipamento não encontrada nos argumentos');
+  }
+
+  late Rx<double> _total = _equipamebt.pricePerDay.obs;
+
+  void getTotal() {
+    _total.value = _equipamebt.pricePerDay * days.value;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -50,7 +66,7 @@ class DetailsEquipamentScreen extends StatelessWidget {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    "Parafuso chave estrela",
+                                    _equipamebt.name,
                                     style: TextStyle(
                                       fontSize: 25,
                                       fontWeight: FontWeight.bold,
@@ -58,7 +74,7 @@ class DetailsEquipamentScreen extends StatelessWidget {
                                     ),
                                   ),
                                   Text(
-                                    "Periodo: 5 - 7 dias",
+                                    "Periodo: ${_equipamebt.minDays} - ${_equipamebt.maxDays} dias",
                                     style:
                                         Theme.of(context).textTheme.titleSmall,
                                   ),
@@ -75,7 +91,7 @@ class DetailsEquipamentScreen extends StatelessWidget {
                           SizedBox(height: 15),
 
                           Text(
-                            "Fabricado em aço carbono/zincado (ou inox), oferece excelente resistência mecânica e durabilidade. Seu encaixe reduz o risco de espanar e proporciona melhor transmissão de força durante o aperto.",
+                            _equipamebt.description,
                             style: Theme.of(context).textTheme.titleSmall,
                             textAlign: TextAlign.justify,
                           ),
@@ -90,7 +106,7 @@ class DetailsEquipamentScreen extends StatelessWidget {
                                 style: Theme.of(context).textTheme.titleMedium,
                                 children: [
                                   TextSpan(
-                                    text: "100.0 MT",
+                                    text: "${_equipamebt.pricePerDay} MT",
                                     style:
                                         Theme.of(
                                           context,
@@ -106,7 +122,6 @@ class DetailsEquipamentScreen extends StatelessWidget {
                           // Input para adionar quantidade
                           Row(
                             mainAxisAlignment: MainAxisAlignment.start,
-                            mainAxisSize: MainAxisSize.min,
                             children: [
                               Obx(
                                 () => SizedBox(
@@ -117,8 +132,9 @@ class DetailsEquipamentScreen extends StatelessWidget {
                                             ? null
                                             : () {
                                               days.value--;
+                                              getTotal();
                                             },
-                                    child: Icon(Iconsax.add, size: 28),
+                                    child: Icon(Iconsax.minus, size: 28),
                                   ),
                                 ),
                               ),
@@ -149,6 +165,7 @@ class DetailsEquipamentScreen extends StatelessWidget {
                                 child: FilledButton(
                                   onPressed: () {
                                     days.value++;
+                                    getTotal();
                                   },
                                   child: Icon(Iconsax.add, size: 28),
                                 ),
@@ -177,9 +194,11 @@ class DetailsEquipamentScreen extends StatelessWidget {
                         "Total:",
                         style: Theme.of(context).textTheme.titleSmall,
                       ),
-                      Text(
-                        "100.0 MT",
-                        style: Theme.of(context).textTheme.headlineMedium,
+                      Obx(
+                        () => Text(
+                          "${_total.value} MT",
+                          style: Theme.of(context).textTheme.headlineMedium,
+                        ),
                       ),
                     ],
                   ),

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
-import 'package:project/features/client_ui/screens/profile/change_password/change_password_screen.dart';
-import 'package:project/features/client_ui/screens/profile/editar_perfil/edit_profile.dart';
+import 'package:project/features/profile/change_password/change_password_screen.dart';
+import 'package:project/features/profile/editar_perfil/edit_profile.dart';
 import 'package:project/utils/constants/colors.dart';
 import 'package:project/utils/constants/sizes.dart';
 import 'package:project/utils/helpers/function_helpers.dart';
