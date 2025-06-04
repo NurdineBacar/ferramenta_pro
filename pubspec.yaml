@@ -47,6 +47,18 @@ dependencies:
   # State
   get: ^4.7.2
 
+  # Para pegar fcheiros
+  file_picker: ^10.1.9
+
+  # para fazer display de imagnes vindas da interne
+  cached_network_image: ^3.4.1
+
+  # para tirar fotos
+  camera: ^0.11.1
+
+  # para pegar imagesn
+  image_picker: ^1.1.2
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
