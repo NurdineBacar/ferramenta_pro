@@ -38,6 +38,7 @@ class CreateApisScreen extends StatelessWidget {
     return Form(
       child: Column(
         children: [
+          SizedBox(height: 70),
           // ... outros campos do formulário permanecem iguais ...
           TextFormField(
             decoration: InputDecoration(

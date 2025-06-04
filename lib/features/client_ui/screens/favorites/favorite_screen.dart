@@ -5,7 +5,6 @@ import 'package:project/common/widgets/item_equipament.dart';
 import 'package:project/features/client_ui/model/cart_item_model.dart';
 import 'package:project/features/client_ui/model/equipament.dart';
 import 'package:project/features/client_ui/screens/details/details_screen.dart';
-import 'package:project/features/client_ui/screens/home/widgets/home_categorie_item.dart';
 import 'package:project/features/client_ui/screens/home/widgets/home_header.dart';
 import 'package:project/utils/constants/colors.dart';
 import 'package:project/utils/device/device_utility.dart';

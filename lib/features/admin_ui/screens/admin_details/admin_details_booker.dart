@@ -6,6 +6,7 @@ import 'package:project/features/client_ui/model/equipament.dart';
 import 'package:project/utils/constants/colors.dart';
 import 'package:project/utils/helpers/function_helpers.dart';
 
+// ignore: must_be_immutable
 class AdminDetailsBookerScreen extends StatelessWidget {
   AdminDetailsBookerScreen({super.key});
 

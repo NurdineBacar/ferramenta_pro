@@ -4,7 +4,6 @@ import 'package:project/features/admin_ui/models/booker_categorie.dart';
 import 'package:project/features/admin_ui/screens/dash/dashboard_screen.dart';
 import 'package:project/features/client_ui/model/equipament.dart';
 import 'package:project/features/client_ui/screens/home/widgets/home_header.dart';
-import 'package:project/utils/constants/colors.dart';
 import 'package:project/utils/helpers/function_helpers.dart';
 
 class AdminBookersScreen extends StatelessWidget {

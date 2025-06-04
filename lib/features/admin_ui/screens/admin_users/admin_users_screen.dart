@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
-import 'package:project/features/admin_ui/screens/admin_epis/craete_epis/create_apis_screen.dart';
+import 'package:project/features/admin_ui/screens/admin_users/create_user/create_user_Screen.dart';
 import 'package:project/features/client_ui/model/equipament.dart';
 import 'package:project/features/client_ui/screens/home/widgets/home_header.dart';
-import 'package:project/utils/constants/colors.dart';
 import 'package:project/utils/device/device_utility.dart';
 import 'package:project/utils/helpers/function_helpers.dart';
 
@@ -41,14 +40,16 @@ class AdminUsersScreen extends StatelessWidget {
                   width: 55,
                   height: 55,
                   child: FilledButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Get.to(() => CreateUserScreen());
+                    },
                     child: const Icon(Iconsax.add, size: 30),
                   ),
                 ),
               ],
             ),
 
-            const SizedBox(height: 10),
+            const SizedBox(height: 20),
 
             // ⬇️ Dropdown reativo usando GetX
             Row(

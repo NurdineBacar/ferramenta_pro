@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/instance_manager.dart';
 import 'package:get/route_manager.dart';
 import 'package:project/features/auth/controller/auth.controller.dart';
-import 'package:project/features/auth/screens/sign-up/sign_up.dart';
 import 'package:project/utils/constants/colors.dart';
 import 'package:project/utils/constants/text_string.dart';
 
