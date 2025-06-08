@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
-import 'package:project/features/auth/controller/auth.controller.dart';
 import 'package:project/utils/constants/sizes.dart';
 import 'package:project/utils/constants/text_string.dart';
 import 'package:project/utils/helpers/function_helpers.dart';
@@ -111,9 +110,7 @@ class NewPasswordScreen extends StatelessWidget {
                       SizedBox(
                         width: Helpers.screenWidth(context),
                         child: ElevatedButton(
-                          onPressed: () {
-                            Get.put(AuthController()).getToSignIn();
-                          },
+                          onPressed: () {},
                           child: Text("Redefinir Senha"),
                         ),
                       ),

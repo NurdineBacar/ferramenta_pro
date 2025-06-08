@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:project/features/auth/controller/auth.controller.dart';
 import 'package:project/features/profile/change_password/change_password_screen.dart';
 import 'package:project/features/profile/editar_perfil/edit_profile.dart';
 import 'package:project/utils/constants/colors.dart';
@@ -8,7 +9,9 @@ import 'package:project/utils/constants/sizes.dart';
 import 'package:project/utils/helpers/function_helpers.dart';
 
 class ProfileScreen extends StatelessWidget {
-  const ProfileScreen({super.key});
+  ProfileScreen({super.key});
+
+  final authController = Get.put(AuthController());
 
   @override
   Widget build(BuildContext context) {
@@ -94,7 +97,9 @@ class ProfileScreen extends StatelessWidget {
                   side: BorderSide(width: 2, color: Colors.red),
                   padding: EdgeInsets.symmetric(vertical: 15),
                 ),
-                onPressed: () {},
+                onPressed: () {
+                  authController.signUp();
+                },
                 child: Text(
                   "Terminar sessão",
                   style: TextStyle(color: Colors.red),

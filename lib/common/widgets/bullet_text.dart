@@ -13,10 +13,7 @@ class BulletText extends StatelessWidget {
           text: "• ",
           style: Theme.of(context).textTheme.bodyMedium,
           children: [
-            TextSpan(
-              text: "$text",
-              style: Theme.of(context).textTheme.bodyMedium,
-            ),
+            TextSpan(text: text, style: Theme.of(context).textTheme.bodyMedium),
           ],
         ),
       ),

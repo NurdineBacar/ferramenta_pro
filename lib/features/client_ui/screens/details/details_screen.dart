@@ -1,28 +1,34 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:http/http.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:project/common/widgets/courossel_item.dart';
-import 'package:project/features/client_ui/model/equipament.dart';
+import 'package:project/data/modal/Equipament.dart';
+import 'package:project/data/modal/cart_model.dart';
+import 'package:project/features/client_ui/controller/client_epis_controller.dart';
+import 'package:project/features/client_ui/controller/fav_controller.dart';
+import 'package:project/features/client_ui/controller/my_cart_controller.dart';
 import 'package:project/utils/constants/colors.dart';
 import 'package:project/utils/helpers/function_helpers.dart';
 
 class DetailsEquipamentScreen extends StatelessWidget {
   DetailsEquipamentScreen({super.key});
 
-  final Rx<int> currentImage = 0.obs;
-
   final Rx<int> days = 1.obs;
 
-  Equipament get _equipamebt {
+  EpiModel get _equipamebt {
     final args = Get.arguments;
     if (args != null && args.containsKey('equipament')) {
-      return args["equipament"] as Equipament;
+      return args["equipament"] as EpiModel;
     }
 
     throw Exception('Equipamento não encontrada nos argumentos');
   }
 
   late Rx<double> _total = _equipamebt.pricePerDay.obs;
+  final _cartController = Get.put(MyCartController());
+  final _epiController = Get.put(ClientEpisController.instance);
+  final _favController = Get.put(FavController());
 
   void getTotal() {
     _total.value = _equipamebt.pricePerDay * days.value;
@@ -30,6 +36,7 @@ class DetailsEquipamentScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    _epiController.getEpiDatas(id: _equipamebt.id!);
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -50,7 +57,7 @@ class DetailsEquipamentScreen extends StatelessWidget {
               child: SingleChildScrollView(
                 child: Column(
                   children: [
-                    CourosselItem(),
+                    CourosselItem(images: _equipamebt.images),
 
                     SizedBox(height: 10),
 
@@ -66,7 +73,7 @@ class DetailsEquipamentScreen extends StatelessWidget {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    _equipamebt.name,
+                                    _equipamebt.title,
                                     style: TextStyle(
                                       fontSize: 25,
                                       fontWeight: FontWeight.bold,
@@ -81,19 +88,51 @@ class DetailsEquipamentScreen extends StatelessWidget {
                                 ],
                               ),
 
-                              IconButton(
-                                onPressed: () {},
-                                icon: Icon(Iconsax.heart, size: 30),
-                              ),
+                              Obx(() {
+                                final epi = _epiController.epiData.value;
+                                final isFav = epi?.userId != null;
+
+                                return IconButton(
+                                  onPressed: () {
+                                    if (epi == null)
+                                      return; // Não faz nada se não carregou ainda
+
+                                    if (!isFav) {
+                                      if (_equipamebt.id != null) {
+                                        _favController.addFav(
+                                          id: _equipamebt.id!,
+                                        );
+                                      }
+                                    } else {
+                                      if (_equipamebt.id != null) {
+                                        _favController.removeFav(
+                                          id: _equipamebt.id!,
+                                        );
+                                      }
+                                    }
+                                  },
+                                  icon:
+                                      isFav
+                                          ? Icon(
+                                            Iconsax.heart5,
+                                            size: 30,
+                                            color: AppColors.primary,
+                                          )
+                                          : Icon(Iconsax.heart, size: 30),
+                                );
+                              }),
                             ],
                           ),
 
                           SizedBox(height: 15),
 
-                          Text(
-                            _equipamebt.description,
-                            style: Theme.of(context).textTheme.titleSmall,
-                            textAlign: TextAlign.justify,
+                          Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              _equipamebt.description.toString(),
+                              style: Theme.of(context).textTheme.titleSmall,
+                              textAlign: TextAlign.justify,
+                            ),
                           ),
                           SizedBox(height: 20),
 
@@ -206,7 +245,7 @@ class DetailsEquipamentScreen extends StatelessWidget {
                   SizedBox(
                     width: Helpers.screenWidth(context) * 0.5,
                     child: ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () => _handleAddCart(),
                       style: ElevatedButton.styleFrom(
                         textStyle: TextStyle(
                           fontSize: 16,
@@ -223,5 +262,15 @@ class DetailsEquipamentScreen extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Future<void> _handleAddCart() async {
+    CartModel item = CartModel(
+      index: _cartController.cartList.length,
+      epi: _equipamebt,
+      days: days.value,
+      total: _total.value,
+    );
+    _cartController.addToCart(item);
   }
 }

@@ -46,7 +46,7 @@ class AdminDetailsBookerScreen extends StatelessWidget {
             child: SingleChildScrollView(
               child: Column(
                 children: [
-                  CourosselItem(),
+                  CourosselItem(images: []),
                   SizedBox(height: 10),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 20.0),

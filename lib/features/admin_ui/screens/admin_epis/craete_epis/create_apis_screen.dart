@@ -3,20 +3,53 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:project/data/modal/Equipament.dart';
+import 'package:project/features/admin_ui/controller/create_epi_controller.dart';
+import 'package:project/features/client_ui/model/categories.dart';
 import 'package:project/utils/helpers/function_helpers.dart';
 
 class CreateApisScreen extends StatelessWidget {
   CreateApisScreen({super.key});
 
   final EpisController controller = Get.put(EpisController());
+  final _createController = Get.put(CreateEpiController());
+  final _formKey = GlobalKey<FormState>();
+
+  EpiModel? get _epi {
+    final args = Get.arguments;
+    if (args != null && args.containsKey('epi')) {
+      return args["epi"] as EpiModel;
+    }
+    return null;
+  }
 
   @override
   Widget build(BuildContext context) {
+    // Preenche os controladores se estiver em modo de edição
+    if (_epi != null) {
+      _createController.title.text = _epi!.title;
+      _createController.minDays.text = _epi!.minDays.toString();
+      _createController.maxDays.text = _epi!.maxDays.toString();
+      _createController.description.text = _epi!.description.toString();
+      _createController.stock.text = _epi!.stock.toString();
+      _createController.pricePerDay.text = _epi!.pricePerDay.toString();
+
+      // Para a categoria, você precisará encontrar no seu lista de categorias
+      final category = _createController.categories.firstWhere(
+        (cat) => cat.label == _epi!.category,
+        orElse: () => _createController.categories.first,
+      );
+      _createController.selectedCategory.value = category;
+    }
+
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
         centerTitle: true,
-        title: Text("Novo Equipamento"),
+        title:
+            _epi == null
+                ? const Text("Novo Equipamento")
+                : Text("Editar Equipamento"),
         titleTextStyle: Theme.of(context).textTheme.headlineMedium,
         leading: IconButton(
           onPressed: () => Get.back(),
@@ -26,9 +59,7 @@ class CreateApisScreen extends StatelessWidget {
       body: SafeArea(
         minimum: const EdgeInsets.symmetric(horizontal: 20),
         child: SingleChildScrollView(
-          child: Column(
-            children: [const SizedBox(height: 40), _buildForm(context)],
-          ),
+          child: Column(children: [_buildForm(context)]),
         ),
       ),
     );
@@ -36,11 +67,21 @@ class CreateApisScreen extends StatelessWidget {
 
   Widget _buildForm(BuildContext context) {
     return Form(
+      key: _formKey,
       child: Column(
         children: [
-          SizedBox(height: 70),
+          SizedBox(height: 40),
           // ... outros campos do formulário permanecem iguais ...
           TextFormField(
+            controller: _createController.title,
+            keyboardType: TextInputType.text,
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return 'Por favor insira o nome do equipemnto';
+              }
+
+              return null;
+            },
             decoration: InputDecoration(
               prefixIcon: const Icon(Iconsax.designtools),
               labelText: "Nome do equipamento",
@@ -48,11 +89,54 @@ class CreateApisScreen extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 16),
+          Obx(
+            () => DropdownButtonFormField<Category>(
+              validator: (value) {
+                if (value == null) {
+                  return "Por favor selecione uma caetegoria";
+                }
+                return null;
+              },
+              value: _createController.selectedCategory.value,
+              onChanged: (value) => _createController.selectedCategory(value),
+              isExpanded: true,
+              hint: const Text("Categoria"),
+              icon: const Icon(Iconsax.arrow_square_down),
+              decoration: const InputDecoration(
+                prefixIcon: Icon(Iconsax.filter),
+                labelText: "Selcione  a categoria",
+              ),
+              items:
+                  _createController.categories
+                      .map(
+                        (item) => DropdownMenuItem<Category>(
+                          value: item,
+                          child: Text(
+                            item.label,
+                            style: const TextStyle(fontSize: 13),
+                          ),
+                        ),
+                      )
+                      .toList(),
+            ),
+          ),
+          SizedBox(height: 16),
           Row(
             children: [
               Expanded(
                 child: TextFormField(
+                  controller: _createController.minDays,
                   keyboardType: TextInputType.number,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return "Insira o numero minimo de dias";
+                    }
+
+                    if (!value.isNum) {
+                      return "Insira o valor valido";
+                    }
+                    return null;
+                  },
                   decoration: InputDecoration(
                     prefixIcon: const Icon(Iconsax.calendar_1),
                     labelText: "Minimo de dias",
@@ -63,7 +147,19 @@ class CreateApisScreen extends StatelessWidget {
               const SizedBox(width: 16),
               Expanded(
                 child: TextFormField(
+                  controller: _createController.maxDays,
                   keyboardType: TextInputType.number,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return "Insira o numero maximo de dias";
+                    }
+
+                    if (!value.isNum) {
+                      return "Insira o valor valido";
+                    }
+                    return null;
+                  },
+
                   decoration: InputDecoration(
                     prefixIcon: const Icon(Iconsax.calendar_1),
                     labelText: "Maximo de dias",
@@ -76,7 +172,16 @@ class CreateApisScreen extends StatelessWidget {
           ),
           const SizedBox(height: 16),
           TextFormField(
+            controller: _createController.description,
             maxLines: null,
+            keyboardType: TextInputType.text,
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return "Insira a descricao do equipamento";
+              }
+
+              return null;
+            },
             decoration: InputDecoration(
               prefixIcon: const Icon(Iconsax.designtools),
               labelText: "Descrição",
@@ -86,6 +191,40 @@ class CreateApisScreen extends StatelessWidget {
           ),
           const SizedBox(height: 16),
           TextFormField(
+            controller: _createController.stock,
+            keyboardType: TextInputType.number,
+            validator: (value) {
+              if (value == null) {
+                return "Por favor insira uma quantidade valida";
+              }
+
+              if (!value.isNum) {
+                return "Insira um valor valido";
+              }
+
+              return null;
+            },
+            decoration: InputDecoration(
+              prefixIcon: const Icon(Iconsax.money_2),
+              labelText: "Quantidade de equipamentos",
+              prefixText: "| ",
+            ),
+          ),
+          const SizedBox(height: 16),
+          TextFormField(
+            controller: _createController.pricePerDay,
+            keyboardType: TextInputType.number,
+            validator: (value) {
+              if (value == null) {
+                return "Por favor insira preco";
+              }
+
+              if (!value.isNum) {
+                return "Insira um valor valido";
+              }
+
+              return null;
+            },
             decoration: InputDecoration(
               prefixIcon: const Icon(Iconsax.money_2),
               labelText: "Preço",
@@ -130,7 +269,13 @@ class CreateApisScreen extends StatelessWidget {
           SizedBox(height: 75),
           SizedBox(
             width: Helpers.screenWidth(context),
-            child: ElevatedButton(onPressed: () {}, child: Text("Criar")),
+            child: ElevatedButton(
+              onPressed:
+                  _epi == null
+                      ? () => _handleCreateEpi()
+                      : () => _handleUpdateEpi(),
+              child: _epi == null ? Text("Criar") : Text("Salvar alteracoes"),
+            ),
           ),
         ],
       ),
@@ -140,7 +285,7 @@ class CreateApisScreen extends StatelessWidget {
   Widget _buildImagePreview() {
     return Obx(
       () =>
-          controller.selectedImages.isEmpty
+          _createController.selectedImages.isEmpty
               ? Center(
                 child: Text(
                   "Nenhuma Imagem carregada",
@@ -151,7 +296,7 @@ class CreateApisScreen extends StatelessWidget {
                 children: [
                   const SizedBox(height: 20),
                   Text(
-                    'Imagens Selecionadas (${controller.selectedImages.length}/${controller.maxImages})',
+                    'Imagens Selecionadas (${_createController.selectedImages.length}/${controller.maxImages})',
                     style: Get.textTheme.titleMedium,
                   ),
                   const SizedBox(height: 10),
@@ -164,14 +309,14 @@ class CreateApisScreen extends StatelessWidget {
                           crossAxisSpacing: 8,
                           mainAxisSpacing: 8,
                         ),
-                    itemCount: controller.selectedImages.length,
+                    itemCount: _createController.selectedImages.length,
                     itemBuilder: (context, index) {
                       return Stack(
                         children: [
                           ClipRRect(
                             borderRadius: BorderRadius.circular(12),
                             child: Image.file(
-                              controller.selectedImages[index],
+                              _createController.selectedImages[index],
                               fit: BoxFit.cover,
                               width: double.infinity,
                               height: double.infinity,
@@ -204,10 +349,32 @@ class CreateApisScreen extends StatelessWidget {
               ),
     );
   }
+
+  Future<void> _handleCreateEpi() async {
+    if (_formKey.currentState!.validate()) {
+      await _createController.createEpi();
+    } else {
+      Helpers.warnigSnackbar(
+        title: 'Campos inválidos',
+        message: 'Por favor preencha todos os campos corretamente',
+      );
+    }
+  }
+
+  Future<void> _handleUpdateEpi() async {
+    if (_formKey.currentState!.validate()) {
+      await _createController.updateEpi(_epi!.id.toString());
+    } else {
+      Helpers.warnigSnackbar(
+        title: 'Campos inválidos',
+        message: 'Por favor preencha todos os campos corretamente',
+      );
+    }
+  }
 }
 
 class EpisController extends GetxController {
-  final RxList<File> selectedImages = <File>[].obs;
+  final controller = Get.put(CreateEpiController());
   final int maxImages = 10;
   final ImagePicker _picker = ImagePicker();
 
@@ -238,7 +405,7 @@ class EpisController extends GetxController {
   }
 
   void _addImages(List<XFile> files) {
-    if (selectedImages.length + files.length > maxImages) {
+    if (controller.selectedImages.length + files.length > maxImages) {
       _showError('Limite de $maxImages imagens atingido');
       return;
     }
@@ -246,11 +413,14 @@ class EpisController extends GetxController {
     final newImages =
         files
             .map((file) => File(file.path))
-            .where((file) => !selectedImages.any((f) => f.path == file.path))
+            .where(
+              (file) =>
+                  !controller.selectedImages.any((f) => f.path == file.path),
+            )
             .toList();
 
     if (newImages.isNotEmpty) {
-      selectedImages.addAll(newImages);
+      controller.selectedImages.addAll(newImages);
     }
   }
 
@@ -265,12 +435,12 @@ class EpisController extends GetxController {
   }
 
   void removeImage(int index) {
-    if (index >= 0 && index < selectedImages.length) {
-      selectedImages.removeAt(index);
+    if (index >= 0 && index < controller.selectedImages.length) {
+      controller.selectedImages.removeAt(index);
     }
   }
 
   void clearImages() {
-    selectedImages.clear();
+    controller.selectedImages.clear();
   }
 }

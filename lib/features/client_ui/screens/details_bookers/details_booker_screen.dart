@@ -2,11 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:project/common/widgets/courossel_item.dart';
+import 'package:project/data/modal/reservation_model.dart';
 import 'package:project/utils/constants/colors.dart';
+import 'package:project/utils/constants/image.dart';
 import 'package:project/utils/helpers/function_helpers.dart';
 
 class DetailsBookerScreen extends StatelessWidget {
   DetailsBookerScreen({super.key});
+
+  ReservationModel get _reserv {
+    final args = Get.arguments;
+    if (args != null && args.containsKey('reserv')) {
+      return args["reserv"] as ReservationModel;
+    }
+
+    throw Exception('Equipamento não encontrada nos argumentos');
+  }
 
   final Rx<int> currentImage = 0.obs;
 
@@ -34,7 +45,9 @@ class DetailsBookerScreen extends StatelessWidget {
               child: SingleChildScrollView(
                 child: Column(
                   children: [
-                    CourosselItem(),
+                    CourosselItem(
+                      images: _reserv.epi?.images ?? [AppImage.noImage],
+                    ),
 
                     SizedBox(height: 10),
 
@@ -50,7 +63,7 @@ class DetailsBookerScreen extends StatelessWidget {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    "Parafuso chave estrela",
+                                    _reserv.epi!.title,
                                     style: TextStyle(
                                       fontSize: 25,
                                       fontWeight: FontWeight.bold,
@@ -58,12 +71,12 @@ class DetailsBookerScreen extends StatelessWidget {
                                     ),
                                   ),
                                   Text(
-                                    "Periodo: 5 - 7 dias",
+                                    "Periodo: ${_reserv.reservedDays} dias",
                                     style:
                                         Theme.of(context).textTheme.titleSmall,
                                   ),
                                   Text(
-                                    "Tempo remanescente: 7 dias",
+                                    "Tempo remanescente: ${_reserv.remainDays} dias",
                                     style:
                                         Theme.of(context).textTheme.titleSmall,
                                   ),
@@ -79,10 +92,13 @@ class DetailsBookerScreen extends StatelessWidget {
 
                           SizedBox(height: 15),
 
-                          Text(
-                            "Fabricado em aço carbono/zincado (ou inox), oferece excelente resistência mecânica e durabilidade. Seu encaixe reduz o risco de espanar e proporciona melhor transmissão de força durante o aperto.",
-                            style: Theme.of(context).textTheme.titleSmall,
-                            textAlign: TextAlign.justify,
+                          Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              _reserv.epi!.description.toString(),
+                              style: Theme.of(context).textTheme.titleSmall,
+                              textAlign: TextAlign.justify,
+                            ),
                           ),
                           SizedBox(height: 20),
 
@@ -95,7 +111,7 @@ class DetailsBookerScreen extends StatelessWidget {
                                 style: Theme.of(context).textTheme.titleMedium,
                                 children: [
                                   TextSpan(
-                                    text: "100.0 MT",
+                                    text: "${_reserv.epi!.pricePerDay} MT",
                                     style:
                                         Theme.of(
                                           context,
@@ -115,7 +131,7 @@ class DetailsBookerScreen extends StatelessWidget {
                               color: AppColors.primary,
                             ),
                             child: Text(
-                              "Observação: Em caso de atraso na devolução, será cobrada uma penalização de 40,00 MT por dia. Em caso de dano ao equipamento, será aplicada uma multa conforme avaliação da equipe da ferragem.",
+                              "Observação: Em caso de atraso na devolução, será cobrada uma penalização de 80,00 MT por dia. Em caso de dano ao equipamento, será aplicada uma multa conforme avaliação da equipe da ferragem.",
                               style: Theme.of(context).textTheme.labelMedium,
                             ),
                           ),

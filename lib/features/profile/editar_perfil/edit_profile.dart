@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:project/data/repositories/profile_controller.dart';
 import 'package:project/utils/constants/sizes.dart';
 import 'package:project/utils/helpers/function_helpers.dart';
 
 class EditProfileScreen extends StatelessWidget {
-  const EditProfileScreen({super.key});
+  EditProfileScreen({super.key});
+
+  final _profileController = Get.put(ProfileController());
+  final _form = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -48,6 +52,7 @@ class EditProfileScreen extends StatelessWidget {
             SizedBox(height: 65),
 
             Form(
+              key: _form,
               child: Column(
                 children: [
                   // First name and surname
@@ -55,6 +60,15 @@ class EditProfileScreen extends StatelessWidget {
                     children: [
                       Expanded(
                         child: TextFormField(
+                          keyboardType: TextInputType.text,
+                          controller: _profileController.firstName,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return "Insira o primeiro nome";
+                            }
+
+                            return null;
+                          },
                           decoration: InputDecoration(
                             prefixIcon: Icon(Iconsax.user),
                             prefixText: "| ",
@@ -65,6 +79,15 @@ class EditProfileScreen extends StatelessWidget {
                       SizedBox(width: 16),
                       Expanded(
                         child: TextFormField(
+                          keyboardType: TextInputType.text,
+                          controller: _profileController.lastName,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return "Insira o apelido";
+                            }
+
+                            return null;
+                          },
                           decoration: InputDecoration(
                             prefixIcon: Icon(Iconsax.user),
                             prefixText: "| ",
@@ -77,6 +100,17 @@ class EditProfileScreen extends StatelessWidget {
                   SizedBox(height: 16),
 
                   TextFormField(
+                    keyboardType: TextInputType.text,
+                    controller: _profileController.email,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return "Insira oemail";
+                      } else if (!value.isEmail) {
+                        return "Insira um email valido";
+                      }
+
+                      return null;
+                    },
                     decoration: InputDecoration(
                       prefixIcon: Icon(Iconsax.sms),
                       labelText: "Email",
@@ -86,6 +120,17 @@ class EditProfileScreen extends StatelessWidget {
                   ),
                   SizedBox(height: 16),
                   TextFormField(
+                    keyboardType: TextInputType.number,
+                    controller: _profileController.phoneNumber,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return "Insira o telefone";
+                      } else if (!value.isPhoneNumber) {
+                        return "insira um numero de telefone valido";
+                      }
+
+                      return null;
+                    },
                     decoration: InputDecoration(
                       prefixIcon: Icon(Iconsax.call),
                       labelText: "Telefone",
@@ -100,7 +145,7 @@ class EditProfileScreen extends StatelessWidget {
                   SizedBox(
                     width: Helpers.screenWidth(context),
                     child: ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () => _handleUpdateProfile(context),
                       child: Text("Salvar"),
                     ),
                   ),
@@ -111,5 +156,16 @@ class EditProfileScreen extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Future<void> _handleUpdateProfile(BuildContext context) async {
+    if (_form.currentState!.validate()) {
+      await _profileController.updateProfile();
+    } else {
+      Helpers.warnigSnackbar(
+        title: "Info",
+        message: "Preencha todos os campos",
+      );
+    }
   }
 }

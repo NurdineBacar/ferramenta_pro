@@ -59,6 +59,22 @@ dependencies:
   # para pegar imagesn
   image_picker: ^1.1.2
 
+  # prar realizar requisicoes http
+  # Permite fazer requisições HTTP (GET, POST, PUT, DELETE, etc.) para APIs ou servidores web.
+  http: ^1.4.0
+
+  # serve para abrir links externos em outros aplicativos instalados no dispositivo
+  url_launcher: ^6.3.1
+
+  # armazenamento local
+  get_storage: ^2.1.1
+
+  # para descodificar o token jwt decoder
+  jwt_decoder: ^2.0.1
+
+  # loggers
+  logger: ^2.5.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

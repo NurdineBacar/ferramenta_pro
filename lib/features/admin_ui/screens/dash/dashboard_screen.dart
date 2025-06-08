@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:get/route_manager.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:project/features/admin_ui/controller/dash_controller.dart';
 import 'package:project/features/admin_ui/screens/admin_details/admin_details_booker.dart';
 import 'package:project/features/client_ui/model/equipament.dart';
-import 'package:project/features/client_ui/screens/home/widgets/home_header.dart';
+import 'package:project/common/widgets/home_header.dart';
 import 'package:project/utils/constants/colors.dart';
 import 'package:project/utils/device/device_utility.dart';
 import 'package:project/utils/helpers/function_helpers.dart';
 
 class DashboardScreen extends StatelessWidget {
-  const DashboardScreen({super.key});
+  DashboardScreen({super.key});
+  final _dashController = Get.put(DashController());
 
   @override
   Widget build(BuildContext context) {
@@ -35,10 +38,12 @@ class DashboardScreen extends StatelessWidget {
                     children: [
                       Row(
                         children: [
-                          AdminDashCard(
-                            title: "Equipamentos",
-                            value: 60,
-                            dateUpdate: "12/12/2025",
+                          Obx(
+                            () => AdminDashCard(
+                              title: "Equipamentos",
+                              value: _dashController.numEpis.value,
+                              dateUpdate: "12/12/2025",
+                            ),
                           ),
                           SizedBox(width: 16),
                           AdminDashCard(

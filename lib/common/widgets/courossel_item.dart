@@ -1,15 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:project/common/widgets/controllers/my_caroussel_controller.dart';
 import 'package:project/utils/constants/colors.dart';
+import 'package:project/utils/constants/image.dart';
 import 'package:project/utils/helpers/function_helpers.dart';
 
 class CourosselItem extends StatelessWidget {
-  CourosselItem({super.key});
+  final List<String> images;
+  CourosselItem({super.key, required this.images});
 
-  final controller = Get.put(CarouselController());
+  final controller = Get.put(MyCarouselController());
 
   @override
   Widget build(BuildContext context) {
+    controller.imageUrls.value =
+        images.isNotEmpty ? images : [AppImage.noImage];
     return SizedBox(
       height: Helpers.size(context).height * 0.42,
       width: Helpers.screenWidth(context),
@@ -55,41 +60,5 @@ class CourosselItem extends StatelessWidget {
         ],
       ),
     );
-  }
-}
-
-class CarouselController extends GetxController {
-  var currentPage = 0.obs;
-  late PageController pageController;
-
-  final List<String> imageUrls = [
-    'assets/images/ite.jpeg',
-    'assets/images/ite-2.jpeg',
-    'assets/images/ite-3.jpeg',
-    'assets/images/ite-4.jpeg',
-  ];
-
-  @override
-  void onInit() {
-    pageController = PageController();
-    super.onInit();
-  }
-
-  void onPageChanged(int index) {
-    currentPage.value = index;
-  }
-
-  void jumpToPage(int index) {
-    pageController.animateToPage(
-      index,
-      duration: Duration(milliseconds: 300),
-      curve: Curves.easeInOut,
-    );
-  }
-
-  @override
-  void onClose() {
-    pageController.dispose();
-    super.onClose();
   }
 }

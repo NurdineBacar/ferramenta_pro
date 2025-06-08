@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:get/instance_manager.dart';
-import 'package:project/features/auth/controller/auth.controller.dart';
 import 'package:project/utils/constants/colors.dart';
 import 'package:project/utils/constants/sizes.dart';
 import 'package:project/utils/constants/text_string.dart';
@@ -74,9 +72,7 @@ class VerifyOtpScreen extends StatelessWidget {
                   SizedBox(
                     width: Helpers.screenWidth(context),
                     child: ElevatedButton(
-                      onPressed: () {
-                        Get.put(AuthController()).getToNewPassword();
-                      },
+                      onPressed: () {},
                       child: Text("Verificar"),
                     ),
                   ),

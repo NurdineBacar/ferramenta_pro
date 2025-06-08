@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:project/common/widgets/bullet_text.dart';
-import 'package:project/features/auth/controller/auth.controller.dart';
 import 'package:project/utils/constants/sizes.dart';
 import 'package:project/utils/constants/text_string.dart';
 
@@ -74,9 +73,7 @@ class TermsAndConditionScreen extends StatelessWidget {
                 children: [
                   Expanded(
                     child: ElevatedButton(
-                      onPressed: () {
-                        Get.put(AuthController()).getToSignIn();
-                      },
+                      onPressed: () {},
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.red,
                       ),

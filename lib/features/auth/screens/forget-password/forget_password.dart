@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:get/instance_manager.dart';
 import 'package:iconsax/iconsax.dart';
-import 'package:project/features/auth/controller/auth.controller.dart';
 import 'package:project/utils/constants/sizes.dart';
 import 'package:project/utils/constants/text_string.dart';
 import 'package:project/utils/helpers/function_helpers.dart';
@@ -11,8 +9,6 @@ class ForgetPasswordScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final useAuthController = Get.put(AuthController());
-
     return Scaffold(
       body: SafeArea(
         minimum: EdgeInsets.symmetric(horizontal: 20),
@@ -53,9 +49,7 @@ class ForgetPasswordScreen extends StatelessWidget {
                   SizedBox(
                     width: Helpers.screenWidth(context),
                     child: ElevatedButton(
-                      onPressed: () {
-                        useAuthController.getToOtpVerification();
-                      },
+                      onPressed: () {},
                       child: Text("Verificar"),
                     ),
                   ),

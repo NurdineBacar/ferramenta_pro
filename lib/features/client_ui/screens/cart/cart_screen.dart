@@ -1,13 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/instance_manager.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:project/data/modal/cart_model.dart';
+import 'package:project/data/modal/reservation_model.dart';
+import 'package:project/features/client_ui/controller/my_cart_controller.dart';
 import 'package:project/features/client_ui/model/cart_item_model.dart';
-import 'package:project/features/client_ui/screens/home/widgets/home_header.dart';
+import 'package:project/common/widgets/home_header.dart';
 import 'package:project/utils/constants/colors.dart';
+import 'package:project/utils/constants/image.dart';
 import 'package:project/utils/device/device_utility.dart';
 
 class CartScreen extends StatelessWidget {
-  const CartScreen({super.key});
+  CartScreen({super.key});
 
+  final _cartCOntroller = Get.put(MyCartController());
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -30,16 +37,18 @@ class CartScreen extends StatelessWidget {
           ),
           const SizedBox(height: 20),
           Expanded(
-            child: ListView.builder(
-              itemCount: CartitemList.cartItems.length,
-              shrinkWrap: true,
-              itemBuilder: (_, index) {
-                final cartItem = CartitemList.cartItems[index];
+            child: Obx(
+              () => ListView.builder(
+                itemCount: _cartCOntroller.cartList.length,
+                shrinkWrap: true,
+                itemBuilder: (_, index) {
+                  final CartModel cartItem = _cartCOntroller.cartList[index];
 
-                return Column(
-                  children: [CartItem(item: cartItem), SizedBox(height: 15)],
-                );
-              },
+                  return Column(
+                    children: [CartItem(item: cartItem), SizedBox(height: 15)],
+                  );
+                },
+              ),
             ),
           ),
           SizedBox(height: 10),
@@ -48,9 +57,11 @@ class CartScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               Text("Total:", style: Theme.of(context).textTheme.titleMedium),
-              Text(
-                "600.0 MT",
-                style: Theme.of(context).textTheme.headlineMedium,
+              Obx(
+                () => Text(
+                  "${_cartCOntroller.total} MT",
+                  style: Theme.of(context).textTheme.headlineMedium,
+                ),
               ),
             ],
           ),
@@ -61,7 +72,7 @@ class CartScreen extends StatelessWidget {
             children: [
               Expanded(
                 child: ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () => _cartCOntroller.cancel(),
                   style: ElevatedButton.styleFrom(
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8),
@@ -79,7 +90,7 @@ class CartScreen extends StatelessWidget {
               SizedBox(width: 15),
               Expanded(
                 child: ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () => _handleReservation(),
                   style: ElevatedButton.styleFrom(
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8),
@@ -100,10 +111,14 @@ class CartScreen extends StatelessWidget {
       ),
     );
   }
+
+  Future<void> _handleReservation() async {
+    await _cartCOntroller.makeReservation();
+  }
 }
 
 class CartItem extends StatelessWidget {
-  final CartItemModel item;
+  final CartModel item;
 
   const CartItem({super.key, required this.item});
 
@@ -131,19 +146,25 @@ class CartItem extends StatelessWidget {
             height: 90,
             child: ClipRRect(
               borderRadius: BorderRadius.circular(12),
-              child: Image.asset(item.imageAsset, fit: BoxFit.cover),
+              child:
+                  item.epi.images.isNotEmpty
+                      ? Image.asset(item.epi.images[0], fit: BoxFit.cover)
+                      : Image.asset(AppImage.noImage, fit: BoxFit.cover),
             ),
           ),
           // Datas
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(item.name, style: Theme.of(context).textTheme.labelLarge),
+              Text(
+                item.epi.title,
+                style: Theme.of(context).textTheme.labelLarge,
+              ),
               Text.rich(
                 TextSpan(
                   text: "Periodo: ",
                   style: Theme.of(context).textTheme.titleSmall,
-                  children: [TextSpan(text: item.period)],
+                  children: [TextSpan(text: "${item.days}")],
                 ),
               ),
               SizedBox(height: 14),
@@ -164,7 +185,8 @@ class CartItem extends StatelessWidget {
 
           // Button
           IconButton(
-            onPressed: () {},
+            onPressed:
+                () => Get.put(MyCartController.instance).remove(item.index),
             icon: Icon(Iconsax.close_circle, size: 32, color: AppColors.error),
           ),
         ],

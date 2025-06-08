@@ -2,15 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:project/common/widgets/item_equipament.dart';
+import 'package:project/features/client_ui/controller/client_epis_controller.dart';
+import 'package:project/features/client_ui/controller/fav_controller.dart';
 import 'package:project/features/client_ui/model/cart_item_model.dart';
 import 'package:project/features/client_ui/model/equipament.dart';
 import 'package:project/features/client_ui/screens/details/details_screen.dart';
-import 'package:project/features/client_ui/screens/home/widgets/home_header.dart';
+import 'package:project/common/widgets/home_header.dart';
 import 'package:project/utils/constants/colors.dart';
 import 'package:project/utils/device/device_utility.dart';
 
 class FavoriteScreen extends StatelessWidget {
-  const FavoriteScreen({super.key});
+  FavoriteScreen({super.key});
+
+  final _fa = ClientEpisController.instance;
+  final _favController = Get.put(FavController());
 
   @override
   Widget build(BuildContext context) {
@@ -35,32 +40,34 @@ class FavoriteScreen extends StatelessWidget {
           const SizedBox(height: 20),
           Expanded(
             child: SingleChildScrollView(
-              child: GridView.builder(
-                itemCount: EquipamentList.equipments.length,
-                shrinkWrap: true,
-                physics:
-                    const NeverScrollableScrollPhysics(), // para não conflitar com o scroll externo
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  mainAxisSpacing: 20,
-                  crossAxisSpacing: 15,
-                  childAspectRatio: 0.8,
+              child: Obx(
+                () => GridView.builder(
+                  itemCount: _favController.favList.length,
+                  shrinkWrap: true,
+                  physics:
+                      const NeverScrollableScrollPhysics(), // para não conflitar com o scroll externo
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    mainAxisSpacing: 15,
+                    crossAxisSpacing: 15,
+                    childAspectRatio: 0.7,
+                  ),
+                  itemBuilder: (_, index) {
+                    final equipament = _favController.favList[index];
+                    return ItemEquipament(
+                      equipement: equipament,
+                      onAction: () {
+                        Get.to(
+                          () => DetailsEquipamentScreen(),
+                          transition: Transition.cupertino,
+                          curve: Curves.easeIn,
+                          duration: Duration(milliseconds: 600),
+                          arguments: {"equipament": equipament},
+                        );
+                      },
+                    );
+                  },
                 ),
-                itemBuilder: (context, index) {
-                  final equipament = EquipamentList.equipments[index];
-                  return ItemEquipament(
-                    equipement: equipament,
-                    onAction: () {
-                      Get.to(
-                        () => DetailsEquipamentScreen(),
-                        transition: Transition.cupertino,
-                        curve: Curves.easeIn,
-                        duration: Duration(milliseconds: 600),
-                        arguments: {"equipament": equipament},
-                      );
-                    },
-                  );
-                },
               ),
             ),
           ),

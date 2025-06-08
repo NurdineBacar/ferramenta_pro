@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:get/instance_manager.dart';
 import 'package:get/route_manager.dart';
-import 'package:project/features/auth/controller/auth.controller.dart';
+import 'package:project/features/auth/screens/sign-up/sign_up.dart';
 import 'package:project/utils/constants/colors.dart';
 import 'package:project/utils/constants/text_string.dart';
 
@@ -10,14 +9,12 @@ class SignInFooter extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final useAuthController = Get.put(AuthController());
-
     return Padding(
       padding: const EdgeInsets.only(bottom: 20),
       child: TextButton(
         onPressed: () {
           // Ação de criar conta
-          useAuthController.getToSignUp();
+          Get.offAll(() => SignUpScreen());
         },
         child: Text.rich(
           TextSpan(

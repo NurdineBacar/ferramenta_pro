@@ -1,62 +1,86 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:get/get_navigation/get_navigation.dart';
-import 'package:get/instance_manager.dart';
-import 'package:get/state_manager.dart';
+import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
-import 'package:project/features/auth/controller/auth.controller.dart';
-import 'package:project/features/client_ui/screens/main.dart';
+import 'package:project/features/auth/controller/sign_in_controller.dart';
 import 'package:project/utils/constants/colors.dart';
 import 'package:project/utils/constants/sizes.dart';
 import 'package:project/utils/constants/text_string.dart';
-import 'package:project/utils/helpers/function_helpers.dart';
 
 class SignForm extends StatelessWidget {
   SignForm({super.key});
+  final _formKey = GlobalKey<FormState>();
+  final _signInController = Get.put(SignInController());
 
-  final RxBool showPassword = false.obs; // Mantenha fora do build
+  final _showPassword = false.obs;
 
   @override
   Widget build(BuildContext context) {
     return Form(
+      key: _formKey,
       child: Column(
         children: [
+          // Email Field
           TextFormField(
+            controller: _signInController.emailController,
             decoration: const InputDecoration(
               prefixIcon: Icon(Iconsax.sms, color: Colors.grey),
               labelText: "Email",
               prefixText: "| ",
               hintText: "Insira seu email",
             ),
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return 'Por favor insira seu email';
+              }
+              if (!value.isEmail) {
+                return 'Por favor insira um email válido';
+              }
+              return null;
+            },
           ),
-          const SizedBox(height: 25),
+
+          const SizedBox(height: 15),
+
+          // Password Field
           Obx(
             () => TextFormField(
-              obscureText: !showPassword.value,
+              controller: _signInController.passwordController,
+              obscureText: !_showPassword.value,
               obscuringCharacter: "*",
               inputFormatters: [LengthLimitingTextInputFormatter(8)],
               decoration: InputDecoration(
                 prefixIcon: const Icon(Iconsax.key, color: Colors.grey),
                 suffixIcon: IconButton(
-                  onPressed: () {
-                    showPassword.value = !showPassword.value;
-                  },
+                  onPressed: () => _showPassword.toggle(),
                   icon: Icon(
-                    showPassword.value ? Iconsax.eye_slash : Iconsax.eye,
+                    _showPassword.value ? Iconsax.eye_slash : Iconsax.eye,
                   ),
                 ),
                 labelText: "Senha",
                 prefixText: "| ",
                 hintText: "Insira sua senha",
               ),
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Por favor insira sua senha';
+                }
+                if (value.length < 6) {
+                  return 'A senha deve ter pelo menos 6 caracteres';
+                }
+                return null;
+              },
             ),
           ),
+
           const SizedBox(height: 15),
+
+          // Forgot Password
           Align(
             alignment: Alignment.centerRight,
             child: TextButton(
               onPressed: () {
-                Get.put(AuthController()).getToForgetPassword();
+                _signInController.getToForgetPassword();
               },
               child: Text(
                 AppTextConst.signInForgetPassword,
@@ -68,24 +92,43 @@ class SignForm extends StatelessWidget {
               ),
             ),
           ),
-          const SizedBox(height: 30),
-          SizedBox(
-            width: Helpers.screenWidth(context),
-            child: ElevatedButton(
-              onPressed: () {
-                Get.to(
-                  () => ClientMain(),
-                  transition: Transition.cupertino,
-                  curve: Curves.ease,
-                  duration: Duration(milliseconds: 700),
-                );
-              },
-              child: const Text("Entrar"),
+
+          const SizedBox(height: 15),
+
+          // Sign In Button
+          Obx(
+            () => SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                onPressed:
+                    _signInController.isLoading.value
+                        ? null
+                        : () => _handleSignIn(context),
+                child:
+                    _signInController.isLoading.value
+                        ? const Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            CircularProgressIndicator(color: Colors.white),
+                            SizedBox(width: 15),
+                            Text("Verificando..."),
+                          ],
+                        )
+                        : const Text("Entrar"),
+              ),
             ),
           ),
-          const SizedBox(height: 20),
         ],
       ),
     );
+  }
+
+  Future<void> _handleSignIn(BuildContext context) async {
+    if (_formKey.currentState!.validate()) {
+      await _signInController.signIn(
+        email: _signInController.emailController.text.trim(),
+        password: _signInController.passwordController.text.trim(),
+      );
+    }
   }
 }

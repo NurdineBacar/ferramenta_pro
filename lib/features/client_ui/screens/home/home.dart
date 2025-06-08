@@ -2,18 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:project/common/widgets/item_equipament.dart';
+import 'package:project/features/client_ui/controller/client_epis_controller.dart';
 import 'package:project/features/client_ui/model/categories.dart';
-import 'package:project/features/client_ui/model/equipament.dart';
 import 'package:project/features/client_ui/screens/categories/categorie_screen.dart';
 import 'package:project/features/client_ui/screens/details/details_screen.dart';
 import 'package:project/features/client_ui/screens/home/widgets/home_banner.dart';
 import 'package:project/features/client_ui/screens/home/widgets/home_categorie_item.dart';
-import 'package:project/features/client_ui/screens/home/widgets/home_header.dart';
+import 'package:project/common/widgets/home_header.dart';
+import 'package:project/utils/constants/colors.dart';
 import 'package:project/utils/constants/text_string.dart';
 
 class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
+  HomeScreen({super.key});
 
+  final _epiController = Get.put(ClientEpisController());
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -76,34 +78,43 @@ class HomeScreen extends StatelessWidget {
                     ),
 
                     // Equipamentes
-                    GridView.builder(
-                      itemCount: EquipamentList.equipments.length,
-                      shrinkWrap: true,
-                      physics:
-                          const NeverScrollableScrollPhysics(), // para não conflitar com o scroll externo
-                      gridDelegate:
-                          const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 2,
-                            mainAxisSpacing: 20,
-                            crossAxisSpacing: 15,
-                            childAspectRatio: 0.8,
+                    Obx(() {
+                      if (_epiController.isLoading.value) {
+                        return Center(
+                          child: CircularProgressIndicator(
+                            color: AppColors.primary,
                           ),
-                      itemBuilder: (context, index) {
-                        final equipament = EquipamentList.equipments[index];
-                        return ItemEquipament(
-                          equipement: equipament,
-                          onAction: () {
-                            Get.to(
-                              () => DetailsEquipamentScreen(),
-                              transition: Transition.cupertino,
-                              curve: Curves.easeIn,
-                              duration: Duration(milliseconds: 600),
-                              arguments: {"equipament": equipament},
-                            );
-                          },
                         );
-                      },
-                    ),
+                      }
+                      return GridView.builder(
+                        itemCount: _epiController.epiList.length,
+                        shrinkWrap: true,
+                        physics:
+                            const NeverScrollableScrollPhysics(), // para não conflitar com o scroll externo
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 2,
+                              mainAxisSpacing: 15,
+                              crossAxisSpacing: 15,
+                              childAspectRatio: 0.7,
+                            ),
+                        itemBuilder: (_, index) {
+                          final epi = _epiController.epiList[index];
+                          return ItemEquipament(
+                            equipement: epi,
+                            onAction: () {
+                              Get.to(
+                                () => DetailsEquipamentScreen(),
+                                transition: Transition.cupertino,
+                                curve: Curves.easeIn,
+                                duration: Duration(milliseconds: 600),
+                                arguments: {"equipament": epi},
+                              );
+                            },
+                          );
+                        },
+                      );
+                    }),
                     SizedBox(height: 20),
                   ],
                 ),

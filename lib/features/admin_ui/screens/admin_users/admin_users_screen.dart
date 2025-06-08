@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:project/features/admin_ui/screens/admin_users/create_user/create_user_Screen.dart';
 import 'package:project/features/client_ui/model/equipament.dart';
-import 'package:project/features/client_ui/screens/home/widgets/home_header.dart';
+import 'package:project/common/widgets/home_header.dart';
 import 'package:project/utils/device/device_utility.dart';
 import 'package:project/utils/helpers/function_helpers.dart';
 
