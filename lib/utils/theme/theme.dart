@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:project/utils/theme/bottom_vavidation/biotoom_navigation_theme.dart';
 import 'package:project/utils/theme/ckeckbox/checkbox_theme.dart';
 import 'package:project/utils/theme/drop_Down/drop_down_theme.dart';
 import 'package:project/utils/theme/elevetedButton/eleveted_button.dart';
@@ -19,6 +20,7 @@ class AppTheme {
     outlinedButtonTheme: AppOutlineButtonTheme.ligthOutlineButtonTheme,
     filledButtonTheme: AppFilledButtonTheme.lightFilledButton,
     dropdownMenuTheme: AppDropDownTheme.lightDropDownTheme,
+    bottomNavigationBarTheme: AppBottomNavigationbar.lightMode,
   );
 
   static ThemeData darkTheme = ThemeData(
@@ -29,5 +31,6 @@ class AppTheme {
     checkboxTheme: AppCheckboxTheme.darkCheboxTheme,
     outlinedButtonTheme: AppOutlineButtonTheme.ligthOutlineButtonTheme,
     filledButtonTheme: AppFilledButtonTheme.darkFilledButton,
+    bottomNavigationBarTheme: AppBottomNavigationbar.darkMode,
   );
 }

@@ -21,10 +21,8 @@ class AdminMain extends StatelessWidget {
           onDestinationSelected:
               (value) => navController.selectedIndex.value = value,
           indicatorColor: Colors.blue.shade600.withOpacity(0.2),
-          backgroundColor:
-              AppDeviceUtils.isDarkMode() ? Colors.black : Colors.white,
           labelTextStyle: WidgetStateProperty.all(
-            TextStyle(fontWeight: FontWeight.w600),
+            TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
           ),
           destinations: [
             NavigationDestination(icon: Icon(Iconsax.home), label: "Inicio"),

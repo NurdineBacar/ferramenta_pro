@@ -40,7 +40,7 @@ class SignUpController extends GetxController {
         "email": user.email,
         "phone_number": user.phoneNumber,
         "password": user.password,
-        "role": "client",
+        "role": "cliente",
       });
 
       if (resp.statusCode != 200 && resp.statusCode != 201) {

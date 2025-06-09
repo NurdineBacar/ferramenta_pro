@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:project/common/widgets/home_header.dart';
+import 'package:project/data/repositories/profile_controller.dart';
 import 'package:project/features/auth/controller/auth.controller.dart';
 import 'package:project/features/profile/change_password/change_password_screen.dart';
 import 'package:project/features/profile/editar_perfil/edit_profile.dart';
@@ -12,7 +14,8 @@ class ProfileScreen extends StatelessWidget {
   ProfileScreen({super.key});
 
   final authController = Get.put(AuthController());
-
+  final _profileController = Get.put(ProfileController());
+  final _homeHeaderController = Get.put(HomeHeaderController());
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -115,8 +118,9 @@ class ProfileScreen extends StatelessWidget {
 }
 
 class ProfileHeader extends StatelessWidget {
-  const ProfileHeader({super.key});
+  ProfileHeader({super.key});
 
+  final _homeHeaderController = Get.put(HomeHeaderController());
   @override
   Widget build(BuildContext context) {
     return Center(
@@ -136,12 +140,17 @@ class ProfileHeader extends StatelessWidget {
                 borderRadius: BorderRadius.circular(100),
               ),
               child: Center(
-                child: Text(
-                  "M",
-                  style: TextStyle(
-                    fontSize: 76,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
+                child: Obx(
+                  () => Text(
+                    _homeHeaderController.name
+                        .toString()
+                        .substring(0, 1)
+                        .toUpperCase(),
+                    style: TextStyle(
+                      fontSize: 76,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
                   ),
                 ),
               ),
@@ -149,12 +158,19 @@ class ProfileHeader extends StatelessWidget {
           ),
 
           SizedBox(height: 15),
-          Text(
-            "Marcel Paulo",
-            style: Theme.of(context).textTheme.headlineLarge,
+          Obx(
+            () => Text(
+              _homeHeaderController.name.toString().toUpperCase(),
+              style: Theme.of(context).textTheme.headlineLarge,
+            ),
           ),
           SizedBox(height: 10),
-          Text("Cliente", style: Theme.of(context).textTheme.titleSmall),
+          Obx(
+            () => Text(
+              _homeHeaderController.role.value,
+              style: Theme.of(context).textTheme.titleSmall,
+            ),
+          ),
         ],
       ),
     );

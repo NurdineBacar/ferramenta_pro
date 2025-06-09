@@ -7,6 +7,8 @@ class HttpClient {
   static const String _baseUrl =
       "http://10.0.2.2:5050"; // Emulador padrão Android
 
+  // static const String _baseUrl = "https://ferramenta-pro-core.onrender.com";
+
   // Method to make a get request
   static Future<http.Response> get(String endpoint) async {
     final response = await http.get(Uri.parse('$_baseUrl/$endpoint'));

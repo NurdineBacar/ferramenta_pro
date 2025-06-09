@@ -1,8 +1,5 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:get/instance_manager.dart';
-import 'package:get/state_manager.dart';
+import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:project/data/modal/user.dart';
 import 'package:project/features/client_ui/controller/my_cart_controller.dart';
@@ -14,67 +11,65 @@ import 'package:project/utils/local_storage/local_storage.dart';
 class HomeHeader extends StatelessWidget {
   final bool? showButtonCart;
 
-  HomeHeader({super.key, this.showButtonCart = true});
-  final controller = Get.put(NavigationController());
-  final _controllerData = Get.put(HomeHeaderController());
-  final _cartController = Get.put(MyCartController.instance);
+  const HomeHeader({super.key, this.showButtonCart = true});
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Row(
-          children: [
-            Container(
-              width: 65,
-              height: 65,
-              padding: EdgeInsets.only(top: 5),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(100),
-                color: AppColors.primary,
-              ),
-              child: Text(
-                _controllerData.name.value.substring(0, 1).toUpperCase(),
-                style: TextStyle(
-                  fontSize: 40,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                ),
-                textAlign: TextAlign.center,
-              ),
-            ),
-            SizedBox(width: 15),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  "Bem Vindo!",
-                  style: Theme.of(context).textTheme.titleSmall,
-                  textAlign: TextAlign.start,
-                ),
-                SizedBox(height: 2),
-                Text(
-                  _controllerData.name.value.toUpperCase(),
-                  style: Theme.of(context).textTheme.headlineMedium,
-                ),
-              ],
-            ),
-          ],
-        ),
+    final controller = Get.find<NavigationController>();
+    final _controllerData = Get.find<HomeHeaderController>();
+    final _cartController = Get.find<MyCartController>();
 
-        showButtonCart == true
-            ? SizedBox(
-              width: 50, // largura maior que o container do ícone
-              height: 50, // altura maior que o container do ícone
+    return Obx(
+      () => Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Row(
+            children: [
+              Container(
+                width: 65,
+                height: 65,
+                padding: const EdgeInsets.only(top: 5),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(100),
+                  color: AppColors.primary,
+                ),
+                child: Text(
+                  _controllerData.userInitials.value,
+                  style: const TextStyle(
+                    fontSize: 40,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+              const SizedBox(width: 15),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "Bem Vindo!",
+                    style: Theme.of(context).textTheme.titleSmall,
+                  ),
+                  const SizedBox(height: 2),
+                  Text(
+                    _controllerData.name.value,
+                    style: Theme.of(context).textTheme.headlineMedium,
+                  ),
+                ],
+              ),
+            ],
+          ),
+
+          if (showButtonCart == true)
+            SizedBox(
+              width: 50,
+              height: 50,
               child: Stack(
-                clipBehavior:
-                    Clip.none, // permite que o badge fique fora do Stack
+                clipBehavior: Clip.none,
                 children: [
                   GestureDetector(
-                    onTap: () {
-                      Get.put(NavigationController()).selectedIndex.value = 1;
-                    },
+                    onTap: () => controller.selectedIndex.value = 1,
                     child: Container(
                       width: 42,
                       height: 42,
@@ -85,21 +80,20 @@ class HomeHeader extends StatelessWidget {
                                 : Colors.grey[300],
                         borderRadius: BorderRadius.circular(8),
                       ),
-                      child: Icon(Iconsax.shopping_cart),
+                      child: const Icon(Iconsax.shopping_cart),
                     ),
                   ),
                   Obx(() {
                     if (_cartController.cartList.isEmpty) {
-                      return SizedBox();
+                      return const SizedBox();
                     }
-
                     return Positioned(
-                      right: 0, // badge um pouco para fora à direita
-                      top: -8, // badge um pouco acima
+                      right: 0,
+                      top: -8,
                       child: Container(
                         width: 25,
                         height: 25,
-                        padding: EdgeInsets.all(4),
+                        padding: const EdgeInsets.all(4),
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(100),
                           color:
@@ -108,7 +102,7 @@ class HomeHeader extends StatelessWidget {
                                   : AppColors.primary,
                         ),
                         child: Text(
-                          "${_cartController.cartList.length}",
+                          _cartController.cartList.length.toString(),
                           style: Theme.of(context).textTheme.labelSmall,
                           textAlign: TextAlign.center,
                         ),
@@ -117,34 +111,51 @@ class HomeHeader extends StatelessWidget {
                   }),
                 ],
               ),
-            )
-            : SizedBox.shrink(),
-      ],
+            ),
+        ],
+      ),
     );
   }
 }
 
 class HomeHeaderController extends GetxController {
   static HomeHeaderController get instance => Get.find();
-  // Instância do seu StorageUtils
+
   final StorageUtils _storage = StorageUtils();
 
-  final RxString name = "".obs;
-  final RxString email = "".obs;
-  final RxString role = "".obs;
+  final RxString name = ''.obs;
+  final RxString email = ''.obs;
+  final RxString role = ''.obs;
+  final Rxn<Map<String, dynamic>> user = Rxn<Map<String, dynamic>>();
+  final RxString userInitials = ''.obs;
 
   @override
   void onInit() {
-    // TODO: implement onInit
     super.onInit();
-    dadosUser();
+    loadUserData();
   }
 
-  void dadosUser() {
-    final Map<String, dynamic> userData = _storage.readData("user_data");
+  Future<void> loadUserData() async {
+    try {
+      final userData = _storage.readData("user_data");
+      user.value = userData;
 
-    name.value = userData["name"] ?? "";
-    role.value = userData["role"] ?? "";
-    email.value = userData["email"] ?? "";
+      if (userData != null && userData is Map<String, dynamic>) {
+        name.value = userData["name"]?.toString() ?? '';
+        email.value = userData["email"]?.toString() ?? '';
+        role.value = userData["role"]?.toString() ?? '';
+
+        // Gerar iniciais do usuário
+        if (name.value.isNotEmpty) {
+          final names = name.value.split(' ');
+          userInitials.value =
+              names.length > 1
+                  ? '${names.first[0]}${names.last[0]}'.toUpperCase()
+                  : name.value.substring(0, 2).toUpperCase();
+        }
+      }
+    } catch (e) {
+      Get.snackbar('Erro', 'Falha ao carregar dados do usuário');
+    }
   }
 }
